@@ -256,7 +256,7 @@ class _HomeState extends State < Home > {
                                            ),
 
                                             onPressed: ()async{
-                                              Task task = Task({'name': name , 'due_date' : dueDate , 'date' : date_str , 'check': check });
+                                              Task task = Task({'name': name , 'due_date' : dueDate , 'date' : date_str , 'is_check': check });
                                               int id = await helper.createTask(task);
                                               Navigator.of(context).pop() ;
 
@@ -300,9 +300,16 @@ class _HomeState extends State < Home > {
                         return ListTile(
                        leading:
                         RoundCheckBox(
-                        onTap: (selected) {
-                          fw = FontWeight.normal ;
-                          check = 1 ;
+                          isChecked: task.isChecked==0?false:true,
+                        onTap: (selected)async {
+                            //TODO" here
+
+                          check=task.isChecked==0?1:0;
+                          task.isChecked = task.isChecked==0?1:0;
+                          await helper.updateTodo(task);
+                          setState(() {
+
+                          });
                         },
                         size: 45 ,
                         checkedWidget: Icon(Icons.check, color: Colors.white ,size: 35,),
@@ -312,8 +319,8 @@ class _HomeState extends State < Home > {
                         ),
 
                           title: Text('${task.name} ${task.date} ',
-                          style: TextStyle(
-                            fontWeight: fw ,
+                          style: TextStyle(//TODO: here
+                            fontWeight: task.isChecked==1?FontWeight.normal:FontWeight.bold ,
                           ),
 
                           ),

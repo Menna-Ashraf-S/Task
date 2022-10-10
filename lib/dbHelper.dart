@@ -14,7 +14,7 @@ class DbHelper {
       return _db ;
     }
     String path = join (await getDatabasesPath() , 'Tasks.db') ;
-     _db = await openDatabase( path , version: 1 , onCreate: (Database db,  int version)async {
+     _db = await openDatabase( path , version: 1 , onCreate: (Database db,  int version)async {//TODO here
       await db.execute('''create table tasks (
   id integer primary key autoincrement,
   name text not null,
@@ -38,6 +38,12 @@ class DbHelper {
       Database db = await createDatabase() ;
       return await db.query('tasks');
      }
+
+     Future<int> updateTodo(Task todo) async {//TODO here
+       Database db = await createDatabase() ;
+    return await db.update('tasks', todo.toMap(),
+        where: 'id = ?', whereArgs: [todo.id]);
+  }
 
      Future <int> delete (int id) async{
       Database db = await createDatabase() ;
