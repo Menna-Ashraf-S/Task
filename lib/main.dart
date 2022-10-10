@@ -56,18 +56,18 @@ class _HomeState extends State < Home > {
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-    toolbarHeight: 200, 
+    toolbarHeight: 220,
     flexibleSpace: Container(
        child : Column(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top:25.0 , left: 20),
-                      child: Row( 
-                        
+                      child: Row(
+
                         children: <Widget>[
                           Icon(Icons.menu , color: Colors.white ,size: 35 ,),
                           SizedBox( width: 25,),
-              
+
                         Text('Tasker',
                         style: TextStyle(
                           fontWeight: FontWeight.bold , fontSize: 40 , color: Colors.white ,
@@ -81,7 +81,7 @@ class _HomeState extends State < Home > {
                     Padding(
                       padding: const EdgeInsets.only( right: 20 , left: 20),
                       child: Row(
-                        
+
                         children: <Widget>[
                           Text('${date.day}',
                           style: TextStyle(
@@ -118,7 +118,7 @@ class _HomeState extends State < Home > {
                         ],
                         ),
                     ),
-                    
+
                   ],
                   ),
               ),
@@ -138,13 +138,13 @@ class _HomeState extends State < Home > {
                     isScrollControlled: true,
                     context: context,
                     builder: (BuildContext bc) {
-                      return 
-                        
+                      return
+
                        Padding(
                          padding: MediaQuery.of(context).viewInsets ,
                          child: Wrap(
                               children: <Widget>[
-                       
+
                                 Padding(
                                   padding: const EdgeInsets.only(top: 15 , right: 20 , left: 20),
 
@@ -152,7 +152,7 @@ class _HomeState extends State < Home > {
                                         decoration: InputDecoration(
                                           hintText: 'Task'
                                       ),
-                                      
+
                                       validator: (value) {
                                         if (value == null || value.isEmpty){
                                           return 'Task name is Required' ;
@@ -163,49 +163,49 @@ class _HomeState extends State < Home > {
                                       },
                                       ),
                                 ),
-                       
-                       
+
+
                                     SizedBox(height: 30,),
-                       
-                       
+
+
                                      Padding(
                                        padding: const EdgeInsets.only( right: 20 , left: 20),
-                                    
+
                                        child: TextFormField(
                                         decoration: InputDecoration(
                                           hintText: 'No due data'
                                                  ),
                                           onChanged: (value) {
                                             dueDate = value ;
-                                            
+
                                     },
                                     validator: (value) {
                                       if (value == null )
                                       value = '' ;
                                       dueDate = value ;
-                                      
+
                                     },
                                               ),
                                      ),
-                                     
-                       
-                       
+
+
+
                                     SizedBox(height: 60,),
-                       
-                       
+
+
                                     Padding(
                                       padding: const EdgeInsets.only(left : 20 ,),
                                       child: Row(
                                         children: <Widget>[
-                       
-                       
+
+
                                           IconButton(
 
                                             icon: Icon(Icons.calendar_today_outlined , size:  30 , color: Colors.blue,),
 
                                             onPressed: () async{
                                              DateTime ?  newDate = await showDatePicker(
-                                                context: context, 
+                                                context: context,
                                                 initialDate: date,
                                                  firstDate: date ,
                                                   lastDate: DateTime(2100),
@@ -213,26 +213,26 @@ class _HomeState extends State < Home > {
                                                   if(newDate == null) {
                                                     return ;
                                                   }
-                                                 
+
                                                     setState(() {
                                                       date_task = newDate ;
                                                       date_str = DateFormat.yMd().format(date_task);
-					  
+
                                                     });
-                                                  
+
                                           },
-                                          
+
                                           ),
-                                            
-                       
-                       
-                                            Text('${date_task.day}/${date_task.month}/${date_task.year}' , 
+
+
+
+                                            Text('${date_task.day}/${date_task.month}/${date_task.year}' ,
                                             style: TextStyle(fontSize: 15),
                                             ),
-                       
+
                                             SizedBox( width: 65,),
-                       
-                       
+
+
                                           TextButton(
                                            child: Text('cancel' ,
                                            style: TextStyle(
@@ -243,20 +243,20 @@ class _HomeState extends State < Home > {
                                             Navigator.of(context).pop() ;
                                            },
                                            ),
-                       
+
                                             SizedBox( width: 25,),
-                       
-                       
+
+
                                           TextButton(
-                       
+
                                             child: Text('Save' ,
                                            style: TextStyle(
                                             fontSize: 20 , color: Colors.blue ,fontWeight: FontWeight.bold ,
                                            ),
                                            ),
-                       
+
                                             onPressed: ()async{
-                                              Task task = Task({'name': name , 'due_date' : dueDate , 'date' : date_str , 'check': check }); 
+                                              Task task = Task({'name': name , 'due_date' : dueDate , 'date' : date_str , 'check': check });
                                               int id = await helper.createTask(task);
                                               Navigator.of(context).pop() ;
 
@@ -264,9 +264,9 @@ class _HomeState extends State < Home > {
                                                 date_task = date ;
                                               });
                                             },
-                                            
+
                                            ),
-                       
+
                                            SizedBox(height: 100,),
                                       ],
                                       ),
@@ -274,7 +274,7 @@ class _HomeState extends State < Home > {
                               ]
                           ),
                        );
-                      
+
                     }
                     );
                   },
@@ -285,6 +285,8 @@ class _HomeState extends State < Home > {
                  future: helper.allTasks(),
                 builder: ((context,
                 AsyncSnapshot snapshot) {
+                  if(snapshot.hasError)
+                    return Center(child: Text(snapshot.error.toString()),);
                   if (! snapshot.hasData){
                     return CircularProgressIndicator();
                   }
@@ -293,7 +295,7 @@ class _HomeState extends State < Home > {
                       itemCount: snapshot.data.length ,
                       itemBuilder: (context , index){
                         Task task = Task.fromMap(snapshot.data[index]);
-                        
+
 
                         return ListTile(
                        leading:
@@ -306,23 +308,23 @@ class _HomeState extends State < Home > {
                         checkedWidget: Icon(Icons.check, color: Colors.white ,size: 35,),
                         checkedColor: Colors.blue,
                          borderColor: Colors.blue ,
-                          
+
                         ),
-                      
-                          title: Text('${task.name} ${task.date} ', 
+
+                          title: Text('${task.name} ${task.date} ',
                           style: TextStyle(
                             fontWeight: fw ,
-                          ), 
-                            
                           ),
 
-                        subtitle: Text(task.dueDate ?? '' , 
+                          ),
+
+                        subtitle: Text(task.dueDate ?? '' ,
                         style: TextStyle(
                           color: Colors.grey ,
                         ),
                         ) ,
                         trailing: IconButton(
-                          icon: Icon(Icons.delete , color: Colors.red, size: 20,), 
+                          icon: Icon(Icons.delete , color: Colors.red, size: 20,),
                           onPressed: (){
                             setState(() {
                               if (task.id !=null){

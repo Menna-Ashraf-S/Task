@@ -13,9 +13,17 @@ class DbHelper {
     if(_db != null ){
       return _db ;
     }
-    String path = join (await getDatabasesPath() , 'T.db') ; 
-     _db = await openDatabase( path , version: 1 , onCreate: (Database db,  int version) {
-      db.execute('create table tasks (id integer primary key autoincrement , name varchar(200) , due_date varchar(200) , date varchar(200) , check integer )' );
+    String path = join (await getDatabasesPath() , 'Tasks.db') ;
+     _db = await openDatabase( path , version: 1 , onCreate: (Database db,  int version)async {
+      await db.execute('''create table tasks (
+  id integer primary key autoincrement,
+  name text not null,
+         due_date text not null ,
+          date text not null ,
+  is_check integer not null
+  )
+      ''');
+      print("DB created");
     },
     
      );
@@ -28,7 +36,7 @@ class DbHelper {
 
      Future <List> allTasks ()async{
       Database db = await createDatabase() ;
-      return db.query('tasks');
+      return await db.query('tasks');
      }
 
      Future <int> delete (int id) async{
